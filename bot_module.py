@@ -1,18 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-import sys
+import sys, os
 
-def iniciar_driver():
+def iniciar_driver(path):
     '''
     Iniciar o Chrome Driver e abre o navegador
     Parâmetros:
     Retorna: WebDriver object
     '''
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome(path)
     whatsapp_link = "https://web.whatsapp.com/"
     driver.get(whatsapp_link)
     driver.implicitly_wait(30)

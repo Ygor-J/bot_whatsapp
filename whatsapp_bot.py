@@ -1,6 +1,8 @@
 from bot_module import *
 import time
 
+PATH = "chromedriver.exe"
+
 def entrada_contatos():
     contatos = []
     with open("contatos.txt", "r+") as f:
@@ -10,7 +12,7 @@ def entrada_contatos():
 def main():
     contatos = entrada_contatos()
     mensagem = "WebDriver drives a browser natively"
-    driver = iniciar_driver()
+    driver = iniciar_driver(PATH)
     no_remember_me(driver)
     for contato in contatos:
         acha_contato(contato, driver)

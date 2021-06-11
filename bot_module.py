@@ -2,9 +2,28 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-import sys
 
 WPP_URL = "https://web.whatsapp.com/"
+
+def le_arquivo(nome_arquivo):
+    '''
+    Função que lê o arquivo e retorna seu conteúdo na estrutura de dados adequada
+
+    Parâmetro: str
+    Retorna: list | str | None
+    '''
+    if nome_arquivo == "contatos":
+        contatos = []
+        with open(f"{nome_arquivo}.txt", "r") as f:
+            contatos = f.read().rstrip().splitlines()
+        return contatos
+    elif nome_arquivo == "mensagem":
+        mensagem = ""
+        with open(f"{nome_arquivo}.txt", "r") as f:
+            mensagem = f.read()
+        return mensagem
+    else:
+        return None
 
 def iniciar_driver(path):
     '''
@@ -37,8 +56,6 @@ def acha_contato(contato, driver):
         campo_pesquisa.send_keys(Keys.ENTER)
     except NoSuchElementException:
         driver.quit()
-        sys.exit()
-
 
 def envia_mensagem(mensagem, driver):
     '''

@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.font import Font
 from PIL import ImageTk, Image # type: ignore
+from bot_module import *
+import time
 
 ICON_PATH = "rsc/logo.jpeg"
 
@@ -44,6 +46,10 @@ def cria_gui():
     submeter_mensagem.pack()
     label_nome_mensagem.pack()
 
+    finalizado = Button(interface, text="Finalizar", font=("Arial", 15),
+                        command=acha_contato_envia_mensagem)
+    finalizado.pack(side=RIGHT)
+
     interface.mainloop()
 
 def cria_gui_aviso():
@@ -75,5 +81,36 @@ def cria_gui_aviso():
     cria_gui()
 
 def escreve_texto(texto, tipo):
+    '''
+    Escreve texto no arquivo de nome tipo.txt
+    Parâmetros: str, str
+    '''
     with open(f"{tipo}.txt", "w+") as f:
         f.write(texto)
+
+DRIVER_PATH = "chromedriver.exe"
+TEMPO_DE_ESPERA = 300
+contagem_clique_finalizar = 0
+def pegar_contagem():
+    global contagem_clique_finalizar
+    contagem_clique_finalizar += 1
+    return contagem_clique_finalizar
+
+
+def acha_contato_envia_mensagem():
+    '''
+    Função que acha o contato e envia a mensagem
+    '''
+    contagem = pegar_contagem()
+    contatos = le_arquivo("contatos")
+    mensagem = le_arquivo("mensagem")
+    if contagem == 1:
+        global driver
+        driver = iniciar_driver(DRIVER_PATH)
+        driver.implicitly_wait(TEMPO_DE_ESPERA)
+        no_remember_me(driver)
+    for contato in contatos:
+            acha_contato(contato, driver)
+            time.sleep(0.5)
+            envia_mensagem(mensagem, driver)
+            time.sleep(0.5)

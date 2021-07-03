@@ -1,8 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
 import csv
+import time
 
 WPP_URL = "https://web.whatsapp.com/"
 
@@ -82,8 +83,8 @@ def envia_mensagem(mensagem, driver):
     except NoSuchElementException:
         return
 
-def escreve_arquivo_csv(path, linha):
-    with open(f"{path}.csv", "a", encoding="utf-8", newline="") as f:
+def escreve_arquivo_csv(nome, linha):
+    with open(f"grupos/{nome}.csv", "a", encoding="utf-8", newline="") as f:
         escrever = csv.writer(f)
         escrever.writerow(linha)
 
@@ -108,9 +109,16 @@ def informacoes_do_grupo(driver, grupo):
 
     try:
         # clica botão de mostrar mais
-        botao_ver_mais = driver.find_element_by_class_name("_1oQqb")
+        botao_ver_mais = driver.find_element_by_xpath("//span[@class='_1oQqb' and @role='button']")
         botao_ver_mais.click()
+    except ElementNotInteractableException:
+        pass
     finally:
         descricao = driver.find_element_by_xpath("//span[contains(@class, '_3-8er')]").get_attribute("textContent")
         escreve_arquivo_csv(nome_grupo, [nome_grupo, descricao])
     
+    membros = driver.find_element_by_xpath("//span[@class='_7yrSq _3-8er selectable-text copyable-text']")
+    membros = membros.get_attribute("textContent")
+    membros = membros.split(", ")
+    for membro in membros:
+        escreve_arquivo_csv(nome_grupo, [membro])

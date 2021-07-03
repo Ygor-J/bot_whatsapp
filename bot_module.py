@@ -9,18 +9,20 @@ def le_arquivo(nome_arquivo):
     '''
     Função que lê o arquivo e retorna seu conteúdo na estrutura de dados adequada
 
-    Parâmetro: str
-    Retorna: list | str | None
+    Parâmetro: 
+    nome_arquivo : str
+            
+    Retorna: list | None
     '''
     if nome_arquivo == "contatos":
-        contatos = []
+        contatos = list()
         with open(f"{nome_arquivo}.txt", "r") as f:
             contatos = f.read().rstrip().splitlines()
         return contatos
     elif nome_arquivo == "mensagem":
-        mensagem = ""
+        mensagem = str()
         with open(f"{nome_arquivo}.txt", "r") as f:
-            mensagem = f.read()
+            mensagem = f.read().rstrip().splitlines()
         return mensagem
     else:
         return None
@@ -28,8 +30,10 @@ def le_arquivo(nome_arquivo):
 def iniciar_driver(path):
     '''
     Inicia o ChromeDriver, abre o navegador e retorna uma instância do
-    ChromeDriver
-    Parâmetro: str
+    ChromeDriver.  
+
+    Parâmetro: 
+    path : str
     '''
     driver = webdriver.Chrome(path)
     driver.get(WPP_URL)
@@ -46,8 +50,10 @@ def no_remember_me(driver):
 def acha_contato(contato, driver):
     '''
     Acha a caixa de texto para pesquisar o contato e o pesquisa
-    Parâmetro: string e WebDriver object
-    Retorna:
+
+    Parâmetros: 
+    contato : str
+    driver : WebDriver object
     '''
     try:
         campo_pesquisa = driver.find_element_by_xpath("//div[contains(@class, 'copyable-text selectable-text')]")
@@ -60,13 +66,17 @@ def acha_contato(contato, driver):
 def envia_mensagem(mensagem, driver):
     '''
     Envia a mensagem ao contato
-    Parâmetros: string e WebDriver object
-    Retorna:
+
+    Parâmetros: 
+    mensagem : list 
+    driver : WebDriver object
     '''
     try:
         campo_mensagem = driver.find_elements_by_xpath("//div[contains(@class, 'copyable-text selectable-text')]")
         campo_mensagem[1].click()
-        campo_mensagem[1].send_keys(mensagem)
+        for linha in mensagem:
+            campo_mensagem[1].send_keys(linha)
+            campo_mensagem[1].send_keys(Keys.SHIFT, Keys.ENTER)
         campo_mensagem[1].send_keys(Keys.ENTER)
     except NoSuchElementException:
         return

@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+import csv
 
 WPP_URL = "https://web.whatsapp.com/"
 
@@ -47,9 +48,9 @@ def no_remember_me(driver):
     botao = driver.find_element(By.NAME, "rememberMe")
     botao.click()
 
-def acha_contato(contato, driver):
+def barra_de_pesquisa(contato, driver):
     '''
-    Acha a caixa de texto para pesquisar o contato e o pesquisa
+    Acha a caixa de texto para pesquisar o contato ou nome do grupo e o pesquisa
 
     Parâmetros: 
     contato : str
@@ -80,3 +81,36 @@ def envia_mensagem(mensagem, driver):
         campo_mensagem[1].send_keys(Keys.ENTER)
     except NoSuchElementException:
         return
+
+def escreve_arquivo_csv(path, linha):
+    with open(f"{path}.csv", "a", encoding="utf-8", newline="") as f:
+        escrever = csv.writer(f)
+        escrever.writerow(linha)
+
+def informacoes_do_grupo(driver, grupo):
+    '''
+    Devolve as informações sobre um certo grupo, como nome, descrição
+    e membros do grupo em um arquivo .csv
+
+    Parâmetros:
+    driver : Webdriver object
+    grupo : str
+    '''
+    # pesquisa o grupo
+    barra_de_pesquisa(grupo, driver)
+    barra_nome_do_grupo = driver.find_element_by_xpath("//div[contains(@class, '_2uaUb')]")
+    barra_nome_do_grupo.click()
+    
+    # nome completo do grupo
+    header = ["Nome Grupo", "Descrição"]
+    nome_grupo = driver.find_element_by_xpath("//div[contains(@class, '_2_1wd')]").get_attribute("textContent")
+    escreve_arquivo_csv(nome_grupo, header)
+
+    try:
+        # clica botão de mostrar mais
+        botao_ver_mais = driver.find_element_by_class_name("_1oQqb")
+        botao_ver_mais.click()
+    finally:
+        descricao = driver.find_element_by_xpath("//span[contains(@class, '_3-8er')]").get_attribute("textContent")
+        escreve_arquivo_csv(nome_grupo, [nome_grupo, descricao])
+    

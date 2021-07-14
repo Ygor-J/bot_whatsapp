@@ -110,7 +110,7 @@ def acha_contato_envia_mensagem():
         driver.implicitly_wait(TEMPO_DE_ESPERA)
         no_remember_me(driver)
     for contato in contatos:
-            acha_contato(contato, driver)
+            barra_de_pesquisa(contato, driver)
             time.sleep(0.5)
             envia_mensagem(mensagem, driver)
             time.sleep(0.5)

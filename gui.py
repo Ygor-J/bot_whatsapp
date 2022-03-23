@@ -16,7 +16,7 @@ def cria_gui():
     # Título, dimensões e ícone
     interface.title(TITULO)
     X = interface.winfo_screenwidth()
-    interface.geometry("600x600+{}+50".format((X//2)-300))
+    interface.geometry("650x650+{}+30".format((X//2)-300))
     icone = ImageTk.PhotoImage(Image.open(ICON_PATH))
     interface.iconphoto(True, icone)
 
@@ -34,7 +34,7 @@ def cria_gui():
     label_nome_mensagem = Label(frame_contatos, text="Mensagem", 
                                 font=FONTE, fg=fg_cor, bg=bg_cor)
     
-    text_area_height = "17"
+    text_area_height = "13"
     contatos = Text(frame_contatos, height=text_area_height)
     contatos.pack()
     submeter_contatos = Button(frame_contatos, text="Enviar", command=lambda:escreve_texto(contatos.get(1.0, END), "contatos"))
@@ -52,33 +52,33 @@ def cria_gui():
 
     interface.mainloop()
 
-def cria_gui_aviso():
-    '''
-    Cria interface inicial com as orientações de uso do resto do programa,
-    chamando dentro de seu escopo a função que cria a janela posterior. Ou seja,
-    não é necessário chamar a função cria_gui().
-    '''
-    GUI_AVISO_TITULO = "NPSP - Aviso"
-    DIMENSOES = (574, 530)
+# def cria_gui_aviso():
+#     '''
+#     Cria interface inicial com as orientações de uso do resto do programa,
+#     chamando dentro de seu escopo a função que cria a janela posterior. Ou seja,
+#     não é necessário chamar a função cria_gui().
+#     '''
+#     GUI_AVISO_TITULO = "NPSP - Aviso"
+#     DIMENSOES = (574, 530)
 
-    # Cria instância de Tk, define o título, dimensões e o ícone do janela
-    interface = Tk()
-    interface.title(GUI_AVISO_TITULO)
-    X = interface.winfo_screenwidth()
-    interface.geometry("{}x{}+{}+50".format(DIMENSOES[0], DIMENSOES[1], (X//2)-300))
-    icone = ImageTk.PhotoImage(Image.open(ICON_PATH))
-    interface.iconphoto(True, icone)
+#     # Cria instância de Tk, define o título, dimensões e o ícone do janela
+#     interface = Tk()
+#     interface.title(GUI_AVISO_TITULO)
+#     X = interface.winfo_screenwidth()
+#     interface.geometry("{}x{}+{}+50".format(DIMENSOES[0], DIMENSOES[1], (X//2)-300))
+#     icone = ImageTk.PhotoImage(Image.open(ICON_PATH))
+#     interface.iconphoto(True, icone)
     
-    canvas = Canvas(interface, width=DIMENSOES[0], height=DIMENSOES[1]-30)
-    canvas.pack()
-    img = ImageTk.PhotoImage(Image.open("rsc/aviso.png"))
-    canvas.create_image(0, 0, anchor=NW, image=img)
+#     canvas = Canvas(interface, width=DIMENSOES[0], height=DIMENSOES[1]-30)
+#     canvas.pack()
+#     img = ImageTk.PhotoImage(Image.open("rsc/aviso.png"))
+#     canvas.create_image(0, 0, anchor=NW, image=img)
 
-    ok_button = Button(interface, text="Ok", font=("Arial",17), command=interface.destroy)
-    ok_button.pack()
-    interface.mainloop()
+#     ok_button = Button(interface, text="Ok", font=("Arial",17), command=interface.destroy)
+#     ok_button.pack()
+#     interface.mainloop()
 
-    cria_gui()
+#     cria_gui()
 
 def escreve_texto(texto, tipo):
     '''

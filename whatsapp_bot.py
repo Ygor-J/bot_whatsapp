@@ -1,7 +1,7 @@
-from gui import cria_gui_aviso
+from gui import cria_gui
 
 def main():
-    cria_gui_aviso()    
+    cria_gui()    
 
 if __name__ == '__main__':
     main()

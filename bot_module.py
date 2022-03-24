@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
 import csv
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 WPP_URL = "https://web.whatsapp.com/"
@@ -73,14 +75,23 @@ def envia_mensagem(mensagem, driver):
     mensagem : list 
     driver : WebDriver object
     '''
+    x_path = "//*[@id='main']/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]"
+    full_x_path = "/html/body/div[1]/div[1]/div[1]/div[4]/div[1]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]"
     try:
-        campo_mensagem = driver.find_elements_by_xpath("//div[contains(@class, 'copyable-text selectable-text')]")
-        campo_mensagem[1].click()
+        campo_mensagem = driver.find_elements_by_xpath(x_path)
+        print("Campo mensagem tamanho:" + str(len(campo_mensagem)))
+        print(campo_mensagem)
+        #troquei posição 1 por posição 0
+        campo_mensagem[0].click()
         for linha in mensagem:
-            campo_mensagem[1].send_keys(linha)
-            campo_mensagem[1].send_keys(Keys.SHIFT, Keys.ENTER)
-        campo_mensagem[1].send_keys(Keys.ENTER)
+            campo_mensagem[0].send_keys(linha)
+            campo_mensagem[0].send_keys(Keys.SHIFT, Keys.ENTER)
+        campo_mensagem[0].send_keys(Keys.ENTER)
     except NoSuchElementException:
+        print(NoSuchElementException)
+        return
+    except IndexError:
+        print(IndexError)
         return
 
 def escreve_arquivo_csv(nome, linha):
@@ -122,3 +133,12 @@ def informacoes_do_grupo(driver, grupo):
     membros = membros.split(", ")
     for membro in membros:
         escreve_arquivo_csv(nome_grupo, [membro])
+
+
+def numero_entra_chat(numero, driver):
+    url = f"https://wa.me/{numero}"
+    driver.get(url)
+
+    new_url = driver.current_url[12:]
+    new_url = "https://web." + new_url
+    driver.get(new_url)

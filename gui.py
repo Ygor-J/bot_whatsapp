@@ -3,6 +3,8 @@ from tkinter.font import Font
 from PIL import ImageTk, Image # type: ignore
 from bot_module import *
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 ICON_PATH = "rsc/logo.jpeg"
 
@@ -47,7 +49,7 @@ def cria_gui():
     label_nome_mensagem.pack()
 
     finalizado = Button(interface, text="Finalizar", font=("Arial", 15),
-                        command=acha_contato_envia_mensagem)
+                        command=acha_numero_envia_mensagem)
     finalizado.pack(side=RIGHT)
 
     interface.mainloop()
@@ -110,7 +112,33 @@ def acha_contato_envia_mensagem():
         driver.implicitly_wait(TEMPO_DE_ESPERA)
         no_remember_me(driver)
     for contato in contatos:
-            barra_de_pesquisa(contato, driver)
-            time.sleep(0.5)
-            envia_mensagem(mensagem, driver)
-            time.sleep(0.5)
+        barra_de_pesquisa(contato, driver)
+        time.sleep(0.5)
+        envia_mensagem(mensagem, driver)
+        time.sleep(0.5)
+
+def processa_numero(numero):
+    # TODO: processa número para ficar no padrão adequado. Manipulação de strings
+    return numero
+
+def acha_numero_envia_mensagem():
+    '''
+    Função que usa a estrutura https://wa.me/phonenumber e envia a mensagem
+    '''
+    contagem = pegar_contagem()
+    numeros = le_arquivo("contatos")
+    mensagem = le_arquivo("mensagem")
+    if contagem == 1:
+        global driver
+        driver = iniciar_driver(DRIVER_PATH)
+        #no_remember_me(driver)
+    try:
+        element = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CLASS_NAME, "_13NKt copyable-text selectable-text")))
+        element.click()
+    except:
+        pass
+    for numero in numeros:
+        driver.implicitly_wait(TEMPO_DE_ESPERA)
+        numero = processa_numero(numero)
+        numero_entra_chat(numero, driver)
+        envia_mensagem(mensagem, driver)

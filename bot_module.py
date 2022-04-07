@@ -20,12 +20,12 @@ def le_arquivo(nome_arquivo):
     '''
     if nome_arquivo == "contatos":
         contatos = list()
-        with open(f"{nome_arquivo}.txt", "r") as f:
+        with open(f"{nome_arquivo}.txt", "r", encoding="utf-8") as f:
             contatos = f.read().rstrip().splitlines()
         return contatos
     elif nome_arquivo == "mensagem":
         mensagem = str()
-        with open(f"{nome_arquivo}.txt", "r") as f:
+        with open(f"{nome_arquivo}.txt", "r", encoding="utf-8") as f:
             mensagem = f.read().rstrip().splitlines()
         return mensagem
     else:

@@ -4,6 +4,7 @@ from PIL import ImageTk, Image # type: ignore
 from bot_module import *
 import selenium
 import time
+import sys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support import expected_conditions
@@ -56,33 +57,33 @@ def cria_gui():
 
     interface.mainloop()
 
-# def cria_gui_aviso():
-#     '''
-#     Cria interface inicial com as orientações de uso do resto do programa,
-#     chamando dentro de seu escopo a função que cria a janela posterior. Ou seja,
-#     não é necessário chamar a função cria_gui().
-#     '''
-#     GUI_AVISO_TITULO = "NPSP - Aviso"
-#     DIMENSOES = (574, 530)
+def cria_gui_aviso():
+    '''
+    Cria interface inicial com as orientações de uso do resto do programa,
+    chamando dentro de seu escopo a função que cria a janela posterior. Ou seja,
+    não é necessário chamar a função cria_gui().
+    '''
+    GUI_AVISO_TITULO = "NPSP - Aviso"
+    DIMENSOES = (574, 530)
 
-#     # Cria instância de Tk, define o título, dimensões e o ícone do janela
-#     interface = Tk()
-#     interface.title(GUI_AVISO_TITULO)
-#     X = interface.winfo_screenwidth()
-#     interface.geometry("{}x{}+{}+50".format(DIMENSOES[0], DIMENSOES[1], (X//2)-300))
-#     icone = ImageTk.PhotoImage(Image.open(ICON_PATH))
-#     interface.iconphoto(True, icone)
+    # Cria instância de Tk, define o título, dimensões e o ícone do janela
+    interface = Tk()
+    interface.title(GUI_AVISO_TITULO)
+    X = interface.winfo_screenwidth()
+    interface.geometry("{}x{}+{}+50".format(DIMENSOES[0], DIMENSOES[1], (X//2)-300))
+    icone = ImageTk.PhotoImage(Image.open(ICON_PATH))
+    interface.iconphoto(True, icone)
     
-#     canvas = Canvas(interface, width=DIMENSOES[0], height=DIMENSOES[1]-30)
-#     canvas.pack()
-#     img = ImageTk.PhotoImage(Image.open("rsc/aviso.png"))
-#     canvas.create_image(0, 0, anchor=NW, image=img)
+    canvas = Canvas(interface, width=DIMENSOES[0], height=DIMENSOES[1]-30)
+    canvas.pack()
+    img = ImageTk.PhotoImage(Image.open("rsc/aviso.png"))
+    canvas.create_image(0, 0, anchor=NW, image=img)
 
-#     ok_button = Button(interface, text="Ok", font=("Arial",17), command=interface.destroy)
-#     ok_button.pack()
-#     interface.mainloop()
+    ok_button = Button(interface, text="Ok", font=("Arial",17), command=interface.destroy)
+    ok_button.pack()
+    interface.mainloop()
 
-#     cria_gui()
+    cria_gui()
 
 def escreve_texto(texto, tipo):
     '''
@@ -164,3 +165,4 @@ def acha_numero_envia_mensagem():
         driver.execute_script('''window.open("http://google.com","_blank");''')
         window_name = driver.window_handles[-1]
         driver.switch_to.window(window_name=window_name)
+    sys.exit(0)

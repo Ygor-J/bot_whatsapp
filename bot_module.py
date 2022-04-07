@@ -78,7 +78,7 @@ def envia_mensagem(mensagem, driver):
     x_path = "//*[@id='main']/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]"
     full_x_path = "/html/body/div[1]/div[1]/div[1]/div[4]/div[1]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]"
     try:
-        campo_mensagem = driver.find_elements_by_xpath(x_path)
+        campo_mensagem = driver.find_elements_by_xpath(full_x_path)
         print("Campo mensagem tamanho:" + str(len(campo_mensagem)))
         print(campo_mensagem)
         #troquei posição 1 por posição 0
@@ -136,9 +136,5 @@ def informacoes_do_grupo(driver, grupo):
 
 
 def numero_entra_chat(numero, driver):
-    url = f"https://wa.me/{numero}"
+    url = f"https://web.whatsapp.com/send/?phone=%2B{numero[1:]}&text&app_absent=0"
     driver.get(url)
-
-    new_url = driver.current_url[12:]
-    new_url = "https://web." + new_url
-    driver.get(new_url)

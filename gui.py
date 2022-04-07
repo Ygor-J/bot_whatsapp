@@ -2,9 +2,11 @@ from tkinter import *
 from tkinter.font import Font
 from PIL import ImageTk, Image # type: ignore
 from bot_module import *
+import selenium
 import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions
 
 ICON_PATH = "rsc/logo.jpeg"
 
@@ -87,7 +89,7 @@ def escreve_texto(texto, tipo):
     Escreve texto no arquivo de nome tipo.txt
     Parâmetros: str, str
     '''
-    with open(f"{tipo}.txt", "w+") as f:
+    with open(f"{tipo}.txt", "w+", encoding="utf-8") as f:
         f.write(texto)
 
 DRIVER_PATH = "chromedriver.exe"
@@ -119,11 +121,24 @@ def acha_contato_envia_mensagem():
 
 def processa_numero(numero):
     # TODO: processa número para ficar no padrão adequado. Manipulação de strings
-    return numero
+    # 9 números: número sem DD
+    # 11 números: com DD
+    # 13 números: com código 55
+    numero = numero.replace(" ", "").replace("(", "").replace(")", "").replace("-", "")
+    if len(numero) < 11:
+        return numero
+    elif len(numero) == 11:
+        return f"+55{numero}"
+    elif len(numero) > 11:
+        if numero[0] == "+":
+            return numero
+        else:
+            return f"+{numero}"
 
 def acha_numero_envia_mensagem():
     '''
     Função que usa a estrutura https://wa.me/phonenumber e envia a mensagem
+    Número tem que estar no formato internacional
     '''
     contagem = pegar_contagem()
     numeros = le_arquivo("contatos")
@@ -137,8 +152,15 @@ def acha_numero_envia_mensagem():
         element.click()
     except:
         pass
-    for numero in numeros:
+    print(numeros)
+    driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 't')
+    for i, numero in enumerate(numeros):
         driver.implicitly_wait(TEMPO_DE_ESPERA)
         numero = processa_numero(numero)
+        print(numero)
         numero_entra_chat(numero, driver)
         envia_mensagem(mensagem, driver)
+        #driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 't')
+        driver.execute_script('''window.open("http://google.com","_blank");''')
+        window_name = driver.window_handles[-1]
+        driver.switch_to.window(window_name=window_name)
